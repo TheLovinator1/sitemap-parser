@@ -1,25 +1,45 @@
+import json
 import logging
-from typing import TYPE_CHECKING
 
-from src.sitemap_parser import SiteMapParser
+from sitemap_parser import JSONExporter
+from sitemap_parser import SiteMapParser
 
-if TYPE_CHECKING:
-    from sitemap_parser import UrlSet
-
-# Configure logger
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 def main() -> None:
     """Example usage of the SiteMapParser."""
-    sitemap_url = "https://ttvdrops.lovinator.space/sitemap.xml"
-    parser = SiteMapParser(sitemap_url)
-    urls: UrlSet = parser.get_urls()
+    # Sitemap with URLs to other sitemaps
+    parser = SiteMapParser(source="https://ttvdrops.lovinator.space/sitemap.xml")
+    exporter = JSONExporter(data=parser)
 
-    logger.info("Fetched %d URLs from sitemap.", len(list(urls)))
-    for url in urls:
-        logger.info("URL: %s", url)
+    if parser.has_urls():
+        json_data: str = exporter.export_urls()
+        json_data = json.loads(json_data)
+        logger.info("Exported URLs: %s", json_data)
+
+    if parser.has_sitemaps():
+        json_data: str = exporter.export_sitemaps()
+        json_data = json.loads(json_data)
+        logger.info("Exported sitemaps: %s", json_data)
+
+    logger.info("----" * 10)
+
+    # Sitemap with "real" URLs
+    parser2 = SiteMapParser(
+        source="https://ttvdrops.lovinator.space/sitemap-static.xml",
+    )
+    exporter2 = JSONExporter(data=parser2)
+    if parser2.has_urls():
+        json_data: str = exporter2.export_urls()
+        json_data = json.loads(json_data)
+        logger.info("Exported URLs: %s", json_data)
+
+    if parser2.has_sitemaps():
+        json_data: str = exporter2.export_sitemaps()
+        json_data = json.loads(json_data)
+        logger.info("Exported sitemaps: %s", json_data)
 
 
 if __name__ == "__main__":

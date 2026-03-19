@@ -65,6 +65,7 @@ type SitemapFields = tuple[
 ]
 
 
+# MARK: BaseData
 class BaseData:
     """Base class for sitemap data.
 
@@ -165,6 +166,7 @@ def download_uri_data(
     return content
 
 
+# MARK: Sitemap
 class Sitemap(BaseData):
     """Representation of the <sitemap> element."""
 
@@ -204,6 +206,7 @@ class Sitemap(BaseData):
         return f"<Sitemap {self.loc}>"
 
 
+# MARK: Url
 class Url(BaseData):
     """Representation of the <url> element.
 
@@ -304,6 +307,7 @@ class Url(BaseData):
         return f"Url(loc={self.loc}, lastmod={self.lastmod}, changefreq={self.changefreq}, priority={self.priority})"
 
 
+# MARK: UrlSet
 class UrlSet:
     r"""Represents a <urlset\> element.
 
@@ -397,6 +401,7 @@ class UrlSet:
         return UrlSet.urls_from_url_set_data(self.urlset_data)
 
 
+# MARK: SitemapIndex
 class SitemapIndex:
     """Represents a <sitemapindex> element."""
 
@@ -461,6 +466,7 @@ class SitemapIndex:
         return f"<SitemapIndex: {self.index_data}>"
 
 
+# MARK: SiteMapParser
 class SiteMapParser:
     """Parses a sitemap or sitemap index and returns the appropriate object."""
 
@@ -624,6 +630,7 @@ class SiteMapParser:
         return str(self._sitemaps if self.has_sitemaps() else self._url_set)
 
 
+# MARK: JSONExporter
 class JSONExporter:
     """Export site map data to JSON format."""
 
